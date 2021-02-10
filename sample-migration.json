@@ -1,0 +1,28 @@
+{
+	"steps": [
+		{
+			/** Update the Uber Eats - Events term to top-level Eats */
+			"type": "update",
+			"taxonomy": "category",
+			"slug" : "eats-events",
+			"updates": {
+				"name": "Events",
+				"slug": "eats",
+				"parent": 0
+			}
+		},
+		{
+			/** Reassign posts from Uber Eats - News to Eats */
+			"type": "reassign",
+			"post_type": [ "post", "page" ],
+			"from" : "eats-news",
+			"to": "eats"
+		},
+		{
+			/** Delete Uber Eats - News, no longer needed */
+			"type": "delete",
+			"taxonomy": "category",
+			"slug": "eats-news"
+		},
+	]
+}

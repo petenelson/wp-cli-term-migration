@@ -1,13 +1,19 @@
 {
-    "name": "petenelson/wp-cli-term-migration",
-    "description": "WordPress plugin with WP CLI commands to migrate taxonomy terms",
-    "type": "wordpress-plugin",
-    "license": "GPLv2 or later",
-    "authors": [
-        {
-            "name": "Pete Nelson",
-            "email": "pete@petenelson.com"
-        }
-    ],
-    "require": {}
+	"name": "petenelson/wp-cli-term-migration",
+	"description": "WordPress plugin with WP CLI commands to migrate taxonomy terms",
+	"type": "wordpress-plugin",
+	"license": "GPLv2 or later",
+	"authors": [
+		{
+			"name": "Pete Nelson",
+			"email": "pete@petenelson.com"
+		}
+	],
+	"require": {
+		"php": ">=7.0"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "^7",
+		"10up/phpcs-composer": "dev-master"
+	}
 }
