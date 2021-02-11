@@ -7,7 +7,7 @@ use WPTermMigration\Migration;
 /**
  * Migration tests.
  */
-class MigrationTests_Tests extends \WP_UnitTestCase {
+class Migration_Tests extends Base_Tests {
 
 	/**
 	 * Tests default_results().
@@ -26,3 +26,4 @@ class MigrationTests_Tests extends \WP_UnitTestCase {
 		$this->assertFalse( $results['error'] );
 	}
 }
+

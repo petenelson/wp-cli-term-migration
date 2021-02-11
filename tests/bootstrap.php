@@ -49,6 +49,8 @@ class WPTermMigration_Unit_Tests_Bootstrap {
 
 		// Start up the WP testing environment.
 		require $wp_develop_dir . '/tests/phpunit/includes/bootstrap.php';
+
+		define( 'WP_TERM_MIGRATION_PATH_PHPUNIT', dirname( __FILE__ ) . '/phpunit/' );
 	}
 
 	/**

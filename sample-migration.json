@@ -1,14 +1,24 @@
 {
 	"steps": [
 		{
-			/** Update the Uber Eats - Events term to top-level Eats */
+			/** Create a News category with description and custom slug */
+			"id": "step-create-news",
+			"type": "create",
+			"taxonomy": "category",
+			"create": {
+				"name": "News",
+				"description": "All of the local news",
+				"slug": "local-news"
+			}
+		},
+		{
+			/** Update the Events Test to Local Events */
 			"type": "update",
 			"taxonomy": "category",
-			"slug" : "eats-events",
-			"updates": {
-				"name": "Events",
-				"slug": "eats",
-				"parent": 0
+			"slug" : "events",
+			"update": {
+				"name": "Local Events",
+				"slug": "local-events"
 			}
 		},
 		{
@@ -17,12 +27,6 @@
 			"post_type": [ "post", "page" ],
 			"from" : "eats-news",
 			"to": "eats"
-		},
-		{
-			/** Delete Uber Eats - News, no longer needed */
-			"type": "delete",
-			"taxonomy": "category",
-			"slug": "eats-news"
 		},
 	]
 }

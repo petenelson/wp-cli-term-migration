@@ -1,0 +1,23 @@
+{
+    "steps": [
+        {
+            "comment": "Create a News category with description and custom slug",
+            "type": "create",
+            "taxonomy": "category",
+            "create": {
+                "name": "News",
+                "description": "All of the local news",
+                "slug": "local-news"
+            }
+        },
+        {
+            "comment": "Create an Austin News term that's a parent of the first term",
+            "type": "create",
+            "taxonomy": "category",
+            "create": {
+                "name": "Austin News",
+                "parent": "local-news"
+            }
+        }
+    ]
+}
