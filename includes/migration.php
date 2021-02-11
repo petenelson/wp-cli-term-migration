@@ -127,29 +127,24 @@ function process_create_step( $step, $steps = [] ) {
 
 	$results = default_results();
 
-	$step_data = wp_parse_args(
-		$step,
+	$create_data = wp_parse_args(
+		$step['create'],
 		[
-			'taxonomy' => '',
+			'taxonomy'    => '',
+			'name'        => '',
+			'description' => '',
+			'slug'        => '',
+			'parent'      => '',
 		]
 	);
 
-	$taxonomy = $step_data['taxonomy'];
+	$taxonomy = $create_data['taxonomy'];
+	unset( $create_data['taxonomy'] );
 
 	if ( ! taxonomy_exists( $taxonomy ) ) {
 		$results['error_code']    = 'taxonomy_error';
 		$results['error_message'] = sprintf( __( 'Taxonomy %s does not exist', 'wp-term-migration' ), $taxonomy );
 	} else if ( isset( $step['create'] ) ) {
-
-		$create_data = wp_parse_args(
-			$step['create'],
-			[
-				'name'        => '',
-				'description' => '',
-				'slug'        => '',
-				'parent'      => '',
-			]
-		);
 
 		$name = $create_data['name'];
 		unset( $create_data['name'] );
@@ -163,7 +158,7 @@ function process_create_step( $step, $steps = [] ) {
 			}
 		}
 
-		$term_data = wp_insert_term( $name, $step_data['taxonomy'], $create_data );
+		$term_data = wp_insert_term( $name, $taxonomy, $create_data );
 
 		if ( is_array( $term_data ) ) {
 			$results['success'] = true;
