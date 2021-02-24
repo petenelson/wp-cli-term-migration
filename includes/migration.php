@@ -112,6 +112,9 @@ function process_step( $step, $steps = [] ) {
 			case 'update':
 				$results = process_update_step( $step, $steps );
 				break;
+			case 'reassign':
+				$results = process_reassign_step( $step, $steps );
+				break;
 		}
 	}
 
@@ -176,7 +179,7 @@ function process_create_step( $step, $steps = [] ) {
 }
 
 /**
- * Processes an updaete step.
+ * Processes an update step.
  *
  * @param  array $step  The step data.
  * @param  array $steps The list of steps, including results from steps that
@@ -236,4 +239,85 @@ function process_update_step( $step, $steps = [] ) {
 	}
 
 	return apply_filters( 'wp_term_migration_proccess_update_step', $results, $step, $steps );
+}
+
+/**
+ * Processes an reassign step.
+ *
+ * @param  array $step  The step data.
+ * @param  array $steps The list of steps, including results from steps that
+ *                      were already processed.
+ * @return array
+ */
+function process_reassign_step( $step, $steps = [] ) {
+
+	$results = default_results();
+
+	$reassign_data = wp_parse_args(
+		$step['reassign'],
+		[
+			'taxonomy'  => '',
+			'post_type' => '',
+			'from_slug' => '',
+			'to_slug'   => '',
+		]
+	);
+
+	$taxonomy = $reassign_data['taxonomy'];
+	unset( $reassign_data['taxonomy'] );
+
+	// Verify the slugs.
+	$from_term = get_term_by( 'slug', $reassign_data['from_slug'], $taxonomy );
+	$to_term   = get_term_by( 'slug', $reassign_data['to_slug'], $taxonomy );
+
+	if ( ! is_a( $from_term, '\WP_Term' ) ) {
+		$results['error_code']    = 'invalid_from_slug';
+		$results['error_message'] = sprintf( __( 'From Slug %1$s does not exist in taxonomy %2$s', 'wp-term-migration' ), $reassign_data['from_slug'], $taxonomy );
+		return $results;
+	}
+
+	if ( ! is_a( $to_term, '\WP_Term' ) ) {
+		$results['error_code']    = 'invalid_to_slug';
+		$results['error_message'] = sprintf( __( 'To Slug %1$s does not exist in taxonomy %2$s', 'wp-term-migration' ), $reassign_data['to_slug'], $taxonomy );
+		return $results;
+	}
+
+	// Get the list of post IDs.
+	$query_args = [
+		'post_type'              => $reassign_data['post_type'],
+		'posts_per_page'         => -1,
+		'fields'                 => 'ids',
+		'update_post_meta_cache' => false,
+		'update_term_meta_cache' => false,
+	];
+
+	$query = new \WP_Query( $query_args );
+
+	$results['post_ids'] = [];
+
+	foreach ( $query->posts as $post_id ) {
+		$results['post_ids'][ $post_id ] = reassign_post_terms( $post_id, $from_term, $to_term );
+	}
+
+	return apply_filters( 'wp_term_migration_proccess_reassign_step', $results, $step, $steps );
+}
+
+/**
+ * Removes a post's from term and adds the to term.
+ *
+ * @param  int     $post_id   The post ID.
+ * @param  WP_Term $from_term The from term.
+ * @param  WP_Term $to_term   The to term.
+ * @return bool
+ */
+function reassign_post_terms( $post_id, $from_term, $to_term ) {
+
+	$results = wp_remove_object_terms( $post_id, $from_term->term_id, $from_term->taxonomy );
+
+	if ( $results ) {
+		$term_data = wp_add_object_terms( $post_id, $to_term->term_id, $to_term->taxonomy );
+		$results   = is_array( $term_data );
+	}
+
+	return $results;
 }

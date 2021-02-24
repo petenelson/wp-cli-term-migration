@@ -27,12 +27,23 @@ class Base_Tests extends \WP_UnitTestCase {
 
 		foreach ( array_keys( $taxonomies ) as $taxonomy ) {
 
-			$terms = get_terms( [ 'taxonomy' => $taxonomy, 'hide_empty' ] );
+			$terms = get_terms( [ 'taxonomy' => $taxonomy, 'hide_empty' => false ] );
+
+			$defaults = [
+				'default' => 0,
+			];
+
+			if ( 'category' === $taxonomy ) {
+				$defaults['default'] = (int) get_option( 'default_category' );
+			}
 
 			foreach ( $terms as $term ) {
-				wp_delete_term( $term->term_id, $term->taxonomy );
+				if ( $defaults['default'] !== $term->term_id ) {
+					$deleted = wp_delete_term( $term->term_id, $term->taxonomy );
+					$this->assertTrue( $deleted );
+				}
 			}
-		}		
+		}
 	}
 
 	/**
