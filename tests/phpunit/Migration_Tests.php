@@ -77,5 +77,45 @@ class Migration_Tests extends Base_Tests {
 		$this->assertSame( 'foo-bar', $term->slug );
 		$this->assertSame( $parent_term_id, $term->parent );
 	}
-}
 
+	/**
+	 * Tests the process_rename_step() function.
+	 *
+	 * @return void
+	 */
+	public function test_process_update_step() {
+
+		$parsed_files = Migration\parse_file( WP_TERM_MIGRATION_PATH_PHPUNIT . 'migrations/004-update.json' );
+
+		$this->assertCount( 4, $parsed_files['steps'] );
+
+		$steps = $parsed_files['steps'];
+
+		// Create the term.
+		$results = Migration\process_step( $steps[0] );
+		$this->assertTrue( $results['success'] );
+
+		$original_term = get_term( $results['term_id'] );
+		$this->assertInstanceOf( '\WP_Term', $original_term );
+
+		// Verify invalid terms don't process.
+		$results = Migration\process_step( $steps[1] );
+		$this->assertFalse( $results['success'] );
+		$this->assertSame( 'empty_slug', $results['error_code'] );
+
+		$results = Migration\process_step( $steps[2] );
+		$this->assertFalse( $results['success'] );
+		$this->assertSame( 'invalid_slug', $results['error_code'] );
+
+		// Verify the original term gets updated.
+		$results = Migration\process_step( $steps[3] );
+		$this->assertTrue( $results['success'] );
+		$this->assertSame( $original_term->term_id, $results['term_id'] );
+
+		$new_term = get_term( $original_term->term_id );
+
+		$this->assertSame( 'Austin News', $new_term->name );
+		$this->assertSame( 'austin-news', $new_term->slug );
+		$this->assertSame( 'All of the Austin news', $new_term->description );
+	}
+}

@@ -109,6 +109,9 @@ function process_step( $step, $steps = [] ) {
 			case 'create':
 				$results = process_create_step( $step, $steps );
 				break;
+			case 'update':
+				$results = process_update_step( $step, $steps );
+				break;
 		}
 	}
 
@@ -170,4 +173,67 @@ function process_create_step( $step, $steps = [] ) {
 	}
 
 	return apply_filters( 'wp_term_migration_proccess_create_step', $results, $step, $steps );
+}
+
+/**
+ * Processes an updaete step.
+ *
+ * @param  array $step  The step data.
+ * @param  array $steps The list of steps, including results from steps that
+ *                      were already processed.
+ * @return array
+ */
+function process_update_step( $step, $steps = [] ) {
+
+	$results = default_results();
+
+	$data = wp_parse_args(
+		$step,
+		[
+			'slug' => '', // The slug we're updating.
+		]
+	);
+
+	$slug = $data['slug'];
+
+	if ( empty( $slug ) ) {
+		$results['error_code']    = 'empty_slug';
+		$results['error_message'] = __( 'Empty slug in update command', 'wp-term-migration' );
+		return $results;
+	}
+
+	$update_data = wp_parse_args(
+		$step['update'],
+		[
+			'taxonomy'    => '',
+			'name'        => '',
+			'description' => '',
+			'slug'        => '',
+			'parent'      => '',
+		]
+	);
+
+	$taxonomy = $update_data['taxonomy'];
+	unset( $update_data['taxonomy'] );
+
+	// Get the term to update.
+	$term = get_term_by( 'slug', $slug, $taxonomy );
+
+	if ( ! is_a( $term, '\WP_Term' ) ) {
+		$results['error_code']    = 'invalid_slug';
+		$results['error_message'] = sprintf( __( 'Slug %1$s does not exist in taxonomy %2$s', 'wp-term-migration' ), $slug, $taxonomy );
+		return $results;
+	}
+
+	$term_data = wp_update_term( $term->term_id, $taxonomy, $update_data );
+
+	if ( is_array( $term_data ) ) {
+		$results['success'] = true;
+		$results['term_id'] = $term_data['term_id'];
+	} else if ( is_wp_error( $term_data ) ) {
+		$results['error_code']    = $term_data->get_error_code();
+		$results['error_message'] = $term_data->get_error_message();
+	}
+
+	return apply_filters( 'wp_term_migration_proccess_update_step', $results, $step, $steps );
 }

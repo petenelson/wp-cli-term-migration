@@ -14,6 +14,7 @@ class Base_Tests extends \WP_UnitTestCase {
 	 */
 	public function tearDown() {
 		$this->delete_all_terms();
+		$this->delete_all_posts();
 	}
 
 	/**
@@ -32,6 +33,25 @@ class Base_Tests extends \WP_UnitTestCase {
 				wp_delete_term( $term->term_id, $term->taxonomy );
 			}
 		}		
+	}
+
+	/**
+	 * Deletes all of the posts.
+	 *
+	 * @return void
+	 */
+	public function delete_all_posts() {
+		$query = new \WP_Query(
+			[
+				'posts_per_page' => -1,
+				'post_type'      => 'post',
+				'fields'         => 'ids',
+			]
+		);
+
+		foreach ( $query->posts as $post_id ) {
+			wp_delete_post( $post_id, true );
+		}
 	}
 
 	/**
