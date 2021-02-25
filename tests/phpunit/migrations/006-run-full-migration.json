@@ -1,7 +1,7 @@
 {
 	"steps": [
 		{
-			"comment": "Reassign Austin News to Local News",
+			"comment": "First step in the full migration",
 			"id": "reassign-step-1",
 			"type": "reassign",
 			"reassign": {
