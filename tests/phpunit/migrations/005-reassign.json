@@ -1,0 +1,25 @@
+{
+	"steps": [
+		{
+			"comment": "Reassign Austin News to Local News",
+			"id": "reassign-step-1",
+			"type": "reassign",
+			"reassign": {
+				"taxonomy": "category",
+				"from_slug": "austin-news",
+				"to_slug": "local-news"
+			}
+		},
+		{
+			"comment": "Reassign Round Rock News to Austin News",
+			"id": "reassign-step-2",
+			"type": "reassign",
+			"reassign": {
+				"post_type": [ "post", "page" ],
+				"taxonomy": "category",
+				"from_slug": "round-rock-news",
+				"to_slug": "local-news"
+			}
+		}
+	]
+}

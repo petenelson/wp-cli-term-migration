@@ -1,0 +1,21 @@
+{
+	"steps": [
+		{
+			"type": "create",
+			"create": {
+				"taxonomy": "category",
+				"name": "News",
+				"description": "All of the local news",
+				"slug": "local-news"
+			}
+		},
+		{
+			"type": "create",
+			"create": {
+				"taxonomy": "category",
+				"name": "Austin News",
+				"parent": "local-news"
+			}
+		}
+	]
+}

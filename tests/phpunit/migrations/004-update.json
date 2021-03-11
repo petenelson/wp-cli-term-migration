@@ -1,0 +1,53 @@
+{
+	"steps": [
+		{
+			"comment": "Create a News category with description and custom slug",
+			"id": "first-step",
+			"type": "create",
+			"create": {
+				"taxonomy": "category",
+				"name": "News",
+				"description": "All of the local news",
+				"slug": "local-news"
+			}
+		},
+		{
+			"comment": "Empty slug check",
+			"type": "update",
+			"update": {
+				"taxonomy": "category",
+				"name": "ABCDE"
+			}
+		},
+		{
+			"comment": "This term does not exist",
+			"type": "update",
+			"slug": "qwerty",
+			"update": {
+				"taxonomy": "category",
+				"name": "Querty News",
+				"slug": "querty-news"
+			}
+		},
+		{
+			"comment": "Updates the news category with different name, slug, and description",
+			"type": "update",
+			"slug": "local-news",
+			"update": {
+				"taxonomy": "category",
+				"name": "Austin News",
+				"slug": "austin-news",
+				"description": "All of the Austin news"
+			}
+		},
+		{
+			"comment": "Updates the Austin news category with a different slug.",
+			"type": "update",
+			"slug": "austin-news",
+			"update": {
+				"taxonomy": "category",
+				"slug": "local-news"
+			}
+		}
+	]
+}

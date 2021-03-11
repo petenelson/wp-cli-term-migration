@@ -1,0 +1,32 @@
+{
+	"steps": [
+		{
+			/** Create a News category with description and custom slug */
+			"id": "step-create-news",
+			"type": "create",
+			"taxonomy": "category",
+			"create": {
+				"name": "News",
+				"description": "All of the local news",
+				"slug": "local-news"
+			}
+		},
+		{
+			/** Update the Events Test to Local Events */
+			"type": "update",
+			"taxonomy": "category",
+			"slug" : "events",
+			"update": {
+				"name": "Local Events",
+				"slug": "local-events"
+			}
+		},
+		{
+			/** Reassign posts from Eats - News to Eats */
+			"type": "reassign",
+			"post_type": [ "post", "page" ],
+			"from" : "eats-news",
+			"to": "eats"
+		},
+	]
+}
