@@ -297,6 +297,12 @@ function process_reassign_step( $step, $steps = [] ) {
 		'fields'                 => 'ids',
 		'update_post_meta_cache' => false,
 		'update_term_meta_cache' => false,
+		'tax_query'              => [
+			[
+				'taxonomy' => $from_term->taxonomy,
+				'terms'    => $from_term->term_id,
+			],
+		],
 	];
 
 	$query = new \WP_Query( $query_args );

@@ -12,7 +12,7 @@ set -euo pipefail
 
 # Set up WordPress installation.
 export WP_DEVELOP_DIR=/tmp/wordpress/
-export WP_VERSION=5.6
+export WP_VERSION=5.7
 
 mkdir -p $WP_DEVELOP_DIR
 

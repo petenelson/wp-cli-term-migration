@@ -87,7 +87,7 @@ class Migration_Tests extends Base_Tests {
 
 		$parsed_files = Migration\parse_file( WP_TERM_MIGRATION_PATH_PHPUNIT . 'migrations/004-update.json' );
 
-		$this->assertCount( 4, $parsed_files['steps'] );
+		$this->assertCount( 5, $parsed_files['steps'] );
 
 		$steps = $parsed_files['steps'];
 
@@ -131,12 +131,19 @@ class Migration_Tests extends Base_Tests {
 		$post_id_1 = self::factory()->post->create();
 		$this->assertGreaterThan( 0, $post_id_1 );
 
+		$post_id_2 = self::factory()->post->create();
+		$this->assertGreaterThan( 0, $post_id_1 );
+
 		$t1 = wp_insert_term( 'My Test Term 1', $taxonomy );
 		$t2 = wp_insert_term( 'My Test Term 2', $taxonomy );
 		$t3 = wp_insert_term( 'My Test Term 3', $taxonomy );
+		$t4 = wp_insert_term( 'My Test Term 4', $taxonomy );
 
 		// Set the first post to the test terms 1 & 2.
 		wp_set_object_terms( $post_id_1, [ $t1['term_id'], $t2['term_id'] ], $taxonomy );
+
+		// Set the first post to term 4.
+		wp_set_object_terms( $post_id_2, [ $t4['term_id'] ], $taxonomy );
 
 		// Verify the test data.
 		$terms = get_the_terms( $post_id_1, $taxonomy );
@@ -152,6 +159,22 @@ class Migration_Tests extends Base_Tests {
 		$results = Migration\reassign_post_terms( $post_id_1, $from_term, $to_term );
 
 		$this->assertTrue( $results );
+
+		// Verify post 1 has test term 2 and 3, no longer has test term 1.
+		$terms = get_the_terms( $post_id_1, $taxonomy );
+		$terms = wp_list_pluck( $terms, 'slug' );
+
+		$this->assertCount( 2, $terms );
+		$this->assertContains( 'my-test-term-2', $terms );
+		$this->assertContains( 'my-test-term-3', $terms );
+		$this->assertNotContains( 'my-test-term-1', $terms );
+
+		// Verify post 2 still has only test term 4 applied to it.
+		$terms = get_the_terms( $post_id_2, $taxonomy );
+		$terms = wp_list_pluck( $terms, 'slug' );
+
+		$this->assertCount( 1, $terms );
+		$this->assertContains( 'my-test-term-4', $terms );
 	}
 
 	/**
@@ -240,7 +263,7 @@ class Migration_Tests extends Base_Tests {
 
 		$step_results = Migration\process_steps( $parsed_files['steps'] );
 
-		// Get the Austin post's terms. Should have Local News and Concerts.
+		// Get the Austin post's terms. Should have only Local News and Concerts.
 		$austin_terms = get_the_terms( $post_id_1, $taxonomy );
 		$austin_terms = wp_list_pluck( $austin_terms, 'slug' );
 
