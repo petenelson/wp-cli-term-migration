@@ -64,7 +64,7 @@ function run_migration( $args, $assoc_args = [] ) {
 		\WP_CLI::error( sprintf( __( 'File "%s" doesn\'t contain any steps.', 'wp-cli-term-migration' ), $filename ) );
 	}
 
-	\WP_CLI::line( sprintf( __( 'Running %d steps...', 'wp-cli-term-migration' ), count( $content['steps'] ) ) );
+	\WP_CLI::line( sprintf( __( 'Running %d steps...', 'wp-cli-term-migration' ), count( $contents['steps'] ) ) );
 
 	foreach ( $contents['steps'] as $step ) {
 
