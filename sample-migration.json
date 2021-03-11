@@ -22,7 +22,7 @@
 			}
 		},
 		{
-			/** Reassign posts from Uber Eats - News to Eats */
+			/** Reassign posts from Eats - News to Eats */
 			"type": "reassign",
 			"post_type": [ "post", "page" ],
 			"from" : "eats-news",

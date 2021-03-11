@@ -7,6 +7,7 @@
  * Author URI:  https://petenelson.io
  * Plugin URI:  https://github.com/petenelson/wp-cli-term-migration
  * License:     GPLv2 or later
+ * Text Domain: wp-cli-term-migration
  *
  * @package  WPTermMigration
  */

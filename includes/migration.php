@@ -29,13 +29,13 @@ function default_results() {
 function parse_file( $filename ) {
 
 	if ( ! file_exists( $filename ) ) {
-		return new \WP_Error( 'file-not-found', $filename . ' not found' );
+		return new \WP_Error( 'file-not-found', sprintf( __( 'File "%s" not found', 'wp-cli-term-migration' ), $filename ) );
 	}
 
 	$contents = file_get_contents( $filename );
 
 	if ( empty( $contents ) ) {
-		return new \WP_Error( 'file-empty', $filename . ' is empty' );
+		return new \WP_Error( 'file-empty', sprintf( __( 'File "%s" is empty', 'wp-cli-term-migration' ), $filename ) );
 	}
 
 	return apply_filters( 'wp_term_migration_parse_file', parse_content( $contents ), $filename );
@@ -205,19 +205,23 @@ function process_update_step( $step, $steps = [] ) {
 		return $results;
 	}
 
-	$update_data = wp_parse_args(
-		$step['update'],
-		[
-			'taxonomy'    => '',
-			'name'        => '',
-			'description' => '',
-			'slug'        => '',
-			'parent'      => '',
-		]
-	);
+	$update_data = [];
 
-	$taxonomy = $update_data['taxonomy'];
-	unset( $update_data['taxonomy'] );
+	$taxonomy = $step['update']['taxonomy'];
+
+	// TODO update tests.
+	$keys = [
+		'name',
+		'description',
+		'slug',
+		'parent',
+	];
+
+	foreach ( $keys as $key ) {
+		if ( isset( $step['update'][ $key ] ) ) {
+			$update_data[ $key ] = $step['update'][ $key ];
+		}
+	}
 
 	// Get the term to update.
 	$term = get_term_by( 'slug', $slug, $taxonomy );
@@ -298,6 +302,8 @@ function process_reassign_step( $step, $steps = [] ) {
 	foreach ( $query->posts as $post_id ) {
 		$results['post_ids'][ $post_id ] = reassign_post_terms( $post_id, $from_term, $to_term );
 	}
+
+	$results['success'] = true;
 
 	return apply_filters( 'wp_term_migration_proccess_reassign_step', $results, $step, $steps );
 }

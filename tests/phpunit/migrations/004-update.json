@@ -39,6 +39,15 @@
 				"slug": "austin-news",
 				"description": "All of the Austin news"
 			}
+		},
+		{
+			"comment": "Updates the Austin news category with a different slug.",
+			"type": "update",
+			"slug": "austin-news",
+			"update": {
+				"taxonomy": "category",
+				"slug": "local-news"
+			}
 		}
 	]
 }
