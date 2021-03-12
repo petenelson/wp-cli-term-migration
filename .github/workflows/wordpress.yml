@@ -32,6 +32,7 @@ jobs:
           composer install
 
       - name: Install WordPress test suite
+        run: bash bin/install-tests-db.sh
         run: bash bin/install-tests.sh
 
 
