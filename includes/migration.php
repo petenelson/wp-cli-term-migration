@@ -330,7 +330,7 @@ function reassign_post_terms( $post_id, $from_term, $to_term ) {
 
 	$results = wp_remove_object_terms( $post_id, $from_term->term_id, $from_term->taxonomy );
 
-	if ( $results ) {
+	if ( ! is_wp_error( $results ) ) {
 		$term_data = wp_add_object_terms( $post_id, $to_term->term_id, $to_term->taxonomy );
 		$results   = is_array( $term_data );
 	}
