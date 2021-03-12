@@ -28,13 +28,13 @@ jobs:
         uses: actions/checkout@v1
 
       - name: Install Composer dependencies
-        run: |
-          composer install
+        run: composer install
+
+      - name: Install WordPress test database
+        run: bash bin/install-tests-db.sh
 
       - name: Install WordPress test suite
-        run: bash bin/install-tests-db.sh
         run: bash bin/install-tests.sh
-
 
       - name: Tests
         run: ./vendor/bin/phpunit
