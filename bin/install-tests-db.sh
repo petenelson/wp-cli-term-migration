@@ -7,4 +7,4 @@ set -x
 set -euo pipefail
 
 # create database
-mysqladmin create wordpress_test --user=root --password=password
+mysqladmin create wordpress_test -h mysql --user=root --password=password
