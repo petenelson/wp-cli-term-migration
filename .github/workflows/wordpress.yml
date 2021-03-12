@@ -36,4 +36,4 @@ jobs:
 
 
       - name: Tests
-        run: $HOME/.composer/vendor/bin/phpunit
+        run: ./vendor/bin/phpunit
