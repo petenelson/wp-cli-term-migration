@@ -169,6 +169,10 @@ function process_create_step( $step, $steps = [] ) {
 		if ( is_array( $term_data ) ) {
 			$results['success'] = true;
 			$results['term_id'] = $term_data['term_id'];
+
+			if ( true === apply_filters( 'wp_term_migration_flush_cache_after_create', true, $step ) ) {
+				wp_cache_flush();
+			}
 		} else if ( is_wp_error( $term_data ) ) {
 			$results['error_code']    = $term_data->get_error_code();
 			$results['error_message'] = $term_data->get_error_message();
