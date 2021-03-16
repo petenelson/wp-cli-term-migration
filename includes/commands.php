@@ -68,17 +68,21 @@ function run_migration( $args, $assoc_args = [] ) {
 
 	foreach ( $contents['steps'] as $step ) {
 
-		$msg = sprintf( __( 'Running ID: %1$s, Type: %2$s, ', '' ), $step['id'], $step['type'] );
+		$msg = sprintf( __( 'Running ID: %1$s, Type: %2$s, ', 'wp-cli-term-migration' ), $step['id'], $step['type'] );
 
 		switch ( $step['type'] ) {
 
+			case 'create':
+				$msg .= sprintf( __( 'Name: %s', 'wp-cli-term-migration' ), $step['create']['name'] );
+				break;
+
 			case 'update':
-				$msg .= sprintf( __( 'Slug: %s', '' ), $step['slug'] );
+				$msg .= sprintf( __( 'Slug: %s', 'wp-cli-term-migration' ), $step['slug'] );
 				break;
 
 			case 'reassign':
-				$msg .= sprintf( __( 'From Slug: %s, ', '' ), $step['reassign']['from_slug'] );
-				$msg .= sprintf( __( 'To Slug: %s', '' ), $step['reassign']['to_slug'] );
+				$msg .= sprintf( __( 'From Slug: %s, ', 'wp-cli-term-migration' ), $step['reassign']['from_slug'] );
+				$msg .= sprintf( __( 'To Slug: %s', 'wp-cli-term-migration' ), $step['reassign']['to_slug'] );
 				break;
 		}
 
