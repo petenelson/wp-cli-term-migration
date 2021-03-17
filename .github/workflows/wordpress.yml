@@ -31,7 +31,7 @@ jobs:
         run: composer install
 
       - name: Start mysql
-        run: sudo /etc/init.d/mysql start
+        run: /etc/init.d/mysql start
 
       - name: Install WordPress test database
         run: bash bin/install-tests-db.sh
