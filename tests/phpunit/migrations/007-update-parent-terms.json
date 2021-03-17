@@ -1,0 +1,31 @@
+{
+    "steps": [
+        {
+            "comment": "Updates Texas to have a parent of United States",
+            "type": "update",
+            "slug": "texas",
+            "update": {
+                "taxonomy": "category",
+                "parent": "united-states"
+            }
+        },
+        {
+            "comment": "Updates Austin to have a parent of Texas",
+            "type": "update",
+            "slug": "austin",
+            "update": {
+                "taxonomy": "category",
+                "parent": "texas"
+            }
+        },
+        {
+            "comment": "Updates United States to have a parent of Mars. Should retain 0 as parent ID",
+            "type": "update",
+            "slug": "united-states",
+            "update": {
+                "taxonomy": "category",
+                "parent": "mars"
+            }
+        }
+    ]
+}
