@@ -13,7 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        max-parallel: 1
         php-version: [ 7.2, 7.3, 7.4 ]
         wordpress-version: [ latest ]
     container:
@@ -30,6 +29,9 @@ jobs:
 
       - name: Install Composer dependencies
         run: composer install
+
+      - name: Start mysql
+        run: sudo /etc/init.d/mysql start
 
       - name: Install WordPress test database
         run: bash bin/install-tests-db.sh
