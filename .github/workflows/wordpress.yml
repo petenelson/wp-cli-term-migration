@@ -30,9 +30,6 @@ jobs:
       - name: Install Composer dependencies
         run: composer install
 
-      - name: Start mysql
-        run: /etc/init.d/mysql start
-
       - name: Install WordPress test database
         run: bash bin/install-tests-db.sh
 
