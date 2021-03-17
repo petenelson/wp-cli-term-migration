@@ -338,4 +338,42 @@ class Migration_Tests extends Base_Tests {
 		$this->assertCount( 1, $post_ids );
 		$this->assertContains( $post_id_1, $post_ids );
 	}
+
+	/**
+	 * Tests parent term updates.
+	 *
+	 * @return void
+	 */
+	public function test_process_parent_term_updates() {
+
+		$taxonomy = 'category';
+
+		// Setup all the test data.
+		$united_states = wp_insert_term( 'United States', $taxonomy );
+		$texas         = wp_insert_term( 'Texas', $taxonomy );
+		$austin        = wp_insert_term( 'Austin', $taxonomy );
+
+		$this->assertGreaterThan( 0, $united_states['term_id'] );
+		$this->assertGreaterThan( 0, $texas['term_id'] );
+		$this->assertGreaterThan( 0, $austin['term_id'] );
+
+		// Now run the steps to update parent term IDs.
+		$parsed_files = Migration\parse_file( WP_TERM_MIGRATION_PATH_PHPUNIT . 'migrations/007-update-parent-terms.json' );
+
+		$this->assertCount( 3, $parsed_files['steps'] );
+
+		Migration\process_steps( $parsed_files['steps'] );
+
+		// Verify Texas has a parent of United States.
+		$texas_term = get_term( $texas['term_id'] );
+		$this->assertSame( $united_states['term_id'], $texas_term->parent );
+
+		// Verify Austin has a parent of Texas.
+		$austin_term = get_term( $austin['term_id'] );
+		$this->assertSame( $texas['term_id'], $austin_term->parent );
+
+		// No updates to United States.
+		$us_term = get_term( $united_states['term_id'] );
+		$this->assertSame( 0, $us_term->parent );
+	}
 }

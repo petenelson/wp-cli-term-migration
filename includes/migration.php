@@ -236,6 +236,17 @@ function process_update_step( $step, $steps = [] ) {
 		return $results;
 	}
 
+	// Set the parent term ID.
+	if ( isset( $update_data['parent'] ) ) {
+		$parent_term = get_term_by( 'slug', $update_data['parent'], $taxonomy );
+		if ( is_a( $parent_term, '\WP_Term' ) ) {
+			$update_data['parent'] = $parent_term->term_id;
+		} else {
+			unset( $update_data['parent'] );
+		}
+	}
+
+	// TODO update parent slug to term ID.
 	$term_data = wp_update_term( $term->term_id, $taxonomy, $update_data );
 
 	if ( is_array( $term_data ) ) {
